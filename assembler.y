@@ -8,6 +8,12 @@
  * tipo I: opcode (6) rs (5) rt (5) imediato (16) # 2 operandos
  * 		Instrucoes do tipo I operam valores imediatos e registradores
  * típo J: opcode (6) endereço (26) # jump
+ * RESTRICOES ATE AGORA:
+ * Sem label
+ * Sem variavel
+ * Portanto sem alguns formatos de instrucao
+ * Sem area de data
+ * Confirmar com o tio depois
  */
 
 %{
@@ -16,52 +22,40 @@
 	#include <stdio.h>
 	#include <string.h>
 	#include "dec2bin.h"
-	extern FILE* yyin, *yyout,;
-	int count = 0;
+	extern FILE* yyin, *yyout;
 
 
 	yyerror(char *s)
 	{
   		fprintf(stderr, "ERROU NO CODIGO, IDIOTA: %s\n", s);
 	}
+
 %}
 
 %token MNEMONICO
 %token REGISTRADOR
 %token IMEDIATO
-%token VARIAVEL
 %token OP
 %token CP
-%token ROTULO
 %token VIRGULA
-%token COMENTARIO
-%token DECLARACAO
+%token ROTULO
 
 %%
-
-arquivo: 
-	| dado texto
-	;
 
 texto: 
 	| texto instrucao
  	| texto ROTULO
 	;
 
-instrucao:  MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA REGISTRADOR {instSet[$1]();printf(%s, buffer), flush}
-	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA IMEDIATO {$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR{$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO REGISTRADOR VIRGULA IMEDIATO OP REGISTRADOR CP {$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA VARIAVEL {$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO REGISTRADOR{$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO ROTULO {$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
-	| MNEMONICO IMEDIATO {$$ = buffer; printf("%s\n", $$); memset(buffer, '-', 32);}
+instrucao:  MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA REGISTRADOR 
+	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA IMEDIATO
+	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR
+	| MNEMONICO REGISTRADOR VIRGULA IMEDIATO OP REGISTRADOR CP 
+	| MNEMONICO REGISTRADOR VIRGULA REGISTRADOR VIRGULA VARIAVEL 
+	| MNEMONICO ROTULO 
+	| MNEMONICO IMEDIATO 
 	;
 
-
-dado: dado dado
-	| DECLARACAO
-	;
 
 %%
 

@@ -1,12 +1,14 @@
- /* Para testar o register set
+ /* So para testar o register set e o instruction set
   */
 
  #include <stdio.h>
  #include <stdlib.h>
  #include "register_set.h"
+ #include "instruction_set.h"
 
  	int main()
  	{
- 		regSet[r_SP]();
+ 		instSet[i_ADD]();
+ 		regSet[r_T4](10);
  		return 0;
  	}
